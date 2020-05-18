@@ -21,10 +21,10 @@ public class OpenFarmingCommand implements CommandExecutor {
             return true;
         }
 
-        int farmLevel = 1;
-        Player targetPlayer = null;
-
         if(args[0].equalsIgnoreCase("givefarm")) {
+            int farmLevel = 1;
+            Player targetPlayer = null;
+
             if(args.length > 1) {
                 if(Bukkit.getPlayer(args[1]) == null) {
                     sender.sendMessage("Invalid player");
@@ -40,10 +40,11 @@ public class OpenFarmingCommand implements CommandExecutor {
 
                 targetPlayer = (Player) sender;
             }
+
+            assert targetPlayer != null;
+            targetPlayer.getInventory().addItem(plugin.createFarmItem(2));
         }
 
-        assert targetPlayer != null;
-        targetPlayer.getInventory().addItem(plugin.createFarmItem(2));
 
         return true;
     }
