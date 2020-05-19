@@ -1,2 +1,2 @@
 # OpenFarming
-A free, open source alternative to EpicFarming by Songoda
+A free, open source Spigot 1.15.2 plugin to enhance farming mechanics.
