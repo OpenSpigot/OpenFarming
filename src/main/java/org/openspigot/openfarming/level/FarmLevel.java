@@ -1,4 +1,4 @@
-package io.github.openspigot.openfarming.level;
+package org.openspigot.openfarming.level;
 
 public class FarmLevel {
     private int level, radius, expCost, ecoCost, pages;

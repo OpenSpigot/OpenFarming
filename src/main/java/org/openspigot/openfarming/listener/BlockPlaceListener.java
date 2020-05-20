@@ -1,7 +1,7 @@
-package io.github.openspigot.openfarming.listener;
+package org.openspigot.openfarming.listener;
 
-import io.github.openspigot.openfarming.OpenFarming;
-import io.github.openspigot.openfarming.farms.FarmBlock;
+import org.openspigot.openfarming.OpenFarming;
+import org.openspigot.openfarming.farm.FarmBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -20,7 +20,7 @@ public class BlockPlaceListener implements Listener {
             int level = plugin.getFarmLevel(event.getItemInHand());
 
             FarmBlock farm = new FarmBlock(event.getBlock().getLocation(), level, plugin.getFarmType(event.getItemInHand()), event.getPlayer().getUniqueId());
-            plugin.getFarmStore().add(farm);
+            plugin.getFarmStore().add(farm, event);
         }
     }
 

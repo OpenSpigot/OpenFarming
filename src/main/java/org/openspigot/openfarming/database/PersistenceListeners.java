@@ -1,20 +1,16 @@
-package io.github.openspigot.openfarming.database;
+package org.openspigot.openfarming.database;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PersistenceListeners implements Listener {
@@ -31,7 +27,7 @@ public class PersistenceListeners implements Listener {
     //
     @EventHandler
     public void onSave(WorldSaveEvent event) {
-        store.save();
+//        store.save();
     }
 
     @EventHandler
@@ -41,7 +37,12 @@ public class PersistenceListeners implements Listener {
             return;
         }
 
-        Bukkit.getServer().broadcastMessage("X: " + event.getChunk().getX() + ", Y: " + event.getChunk().getZ());
+        store.loadChunk(event.getChunk());
+    }
+
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        store.saveChunk(event.getChunk());
     }
 
     //

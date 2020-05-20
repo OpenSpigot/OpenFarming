@@ -1,7 +1,7 @@
-package io.github.openspigot.openfarming.listener;
+package org.openspigot.openfarming.listener;
 
-import io.github.openspigot.openfarming.OpenFarming;
-import io.github.openspigot.openfarming.farms.FarmBlock;
+import org.openspigot.openfarming.OpenFarming;
+import org.openspigot.openfarming.farm.FarmBlock;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

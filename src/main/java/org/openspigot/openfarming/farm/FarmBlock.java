@@ -1,7 +1,8 @@
-package org.openspigot.openfarming.farms;
+package org.openspigot.openfarming.farm;
 
 import org.openspigot.openfarming.OpenFarming;
 import org.openspigot.openfarming.database.PersistentBlock;
+import org.openspigot.openfarming.gui.FarmOverview;
 import org.openspigot.openfarming.level.FarmLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,7 +22,7 @@ public class FarmBlock extends PersistentBlock {
     private FarmType type;
     private UUID owner;
 
-    // private transient GUI
+    private transient FarmOverview farmOverview = new FarmOverview(this);
 
     //
     // Constructors
@@ -74,6 +75,10 @@ public class FarmBlock extends PersistentBlock {
     //
     // Events
     //
+    @Override
+    public void init() {
+        this.farmOverview = new FarmOverview(this);
+    }
 
     @Override
     public void onInteract(PlayerInteractEvent event) {
@@ -81,8 +86,9 @@ public class FarmBlock extends PersistentBlock {
             return;
         }
 
-        event.getPlayer().sendMessage("Interact");
+        farmOverview.show(event.getPlayer());
     }
+
 
     //
     // Getters

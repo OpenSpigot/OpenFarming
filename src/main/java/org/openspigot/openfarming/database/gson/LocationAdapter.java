@@ -1,4 +1,4 @@
-package io.github.openspigot.openfarming.database.gson;
+package org.openspigot.openfarming.database.gson;
 
 import com.google.gson.*;
 import org.bukkit.Bukkit;

@@ -1,7 +1,7 @@
-package io.github.openspigot.openfarming.command;
+package org.openspigot.openfarming.command;
 
-import io.github.openspigot.openfarming.OpenFarming;
-import io.github.openspigot.openfarming.farms.FarmType;
+import org.openspigot.openfarming.OpenFarming;
+import org.openspigot.openfarming.farm.FarmType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -25,7 +25,6 @@ public class OpenFarmingCommand implements CommandExecutor {
         // /openfarming givefarm <type> <level> <?player>
 
         if(args[0].equalsIgnoreCase("givefarm")) {
-            int farmLevel = 1;
             Player targetPlayer;
 
             if(args.length > 3) {
@@ -44,6 +43,7 @@ public class OpenFarmingCommand implements CommandExecutor {
                 targetPlayer = (Player) sender;
             }
 
+            int farmLevel;
             try {
                 farmLevel = Integer.parseInt(args[2]);
             } catch (Exception e) {
@@ -55,6 +55,17 @@ public class OpenFarmingCommand implements CommandExecutor {
 
             assert targetPlayer != null;
             targetPlayer.getInventory().addItem(plugin.createFarmItem(farmLevel, type));
+        }
+
+        if(args[0].equalsIgnoreCase("loc")) {
+            Player player = (Player) sender;
+
+            player.sendMessage("X: " + player.getLocation().getChunk().getX() + ", Z: " + player.getLocation().getChunk().getZ());
+            return true;
+        }
+
+        if(args[0].equalsIgnoreCase("saveall")) {
+            plugin.getFarmStore().saveAll();
         }
 
 

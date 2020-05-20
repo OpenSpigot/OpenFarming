@@ -1,4 +1,4 @@
-package io.github.openspigot.openfarming.level;
+package org.openspigot.openfarming.level;
 
 import java.util.HashMap;
 import java.util.Map;
