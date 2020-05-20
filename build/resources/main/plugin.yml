@@ -1,6 +1,6 @@
 name: OpenFarming
 version: 1.0-SNAPSHOT
-main: io.github.openspigot.openfarming.OpenFarming
+main: org.openspigot.openfarming.OpenFarming
 api-version: 1.13
 authors: [LegendEffects]
 website: openspigot.github.io

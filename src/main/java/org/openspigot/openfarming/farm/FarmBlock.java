@@ -1,8 +1,8 @@
-package io.github.openspigot.openfarming.farms;
+package org.openspigot.openfarming.farms;
 
-import io.github.openspigot.openfarming.OpenFarming;
-import io.github.openspigot.openfarming.database.PersistentBlock;
-import io.github.openspigot.openfarming.level.FarmLevel;
+import org.openspigot.openfarming.OpenFarming;
+import org.openspigot.openfarming.database.PersistentBlock;
+import org.openspigot.openfarming.level.FarmLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

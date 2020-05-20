@@ -1,4 +1,4 @@
-package io.github.openspigot.openfarming.farms;
+package org.openspigot.openfarming.farms;
 
 public enum FarmType {
     CROP,

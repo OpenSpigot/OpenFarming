@@ -1,13 +1,13 @@
-package io.github.openspigot.openfarming;
+package org.openspigot.openfarming;
 
 import de.tr7zw.nbtapi.NBTItem;
-import io.github.openspigot.openfarming.command.OpenFarmingCommand;
-import io.github.openspigot.openfarming.database.BlockStore;
-import io.github.openspigot.openfarming.farms.FarmBlock;
-import io.github.openspigot.openfarming.farms.FarmType;
-import io.github.openspigot.openfarming.level.LevelManager;
-import io.github.openspigot.openfarming.listener.BlockFadeListener;
-import io.github.openspigot.openfarming.listener.BlockPlaceListener;
+import org.openspigot.openfarming.command.OpenFarmingCommand;
+import org.openspigot.openfarming.database.BlockStore;
+import org.openspigot.openfarming.farm.FarmBlock;
+import org.openspigot.openfarming.farm.FarmType;
+import org.openspigot.openfarming.level.LevelManager;
+import org.openspigot.openfarming.listener.BlockFadeListener;
+import org.openspigot.openfarming.listener.BlockPlaceListener;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,7 +35,8 @@ public final class OpenFarming extends JavaPlugin {
         // Register Commands
         getCommand("openfarming").setExecutor(new OpenFarmingCommand(this));
 
-        this.farmStore = new BlockStore<>(this, FARM_MATERIAL, new File(getDataFolder(), "farms.json"));
+        File farmFolder = new File(getDataFolder(), "farms");
+        this.farmStore = new BlockStore<>(this, FARM_MATERIAL, FarmBlock.class, farmFolder);
 
         // Register Listeners
         new BlockPlaceListener(this);

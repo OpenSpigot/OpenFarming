@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import io.github.openspigot.openfarming.database.gson.LocationAdapter;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,13 +20,14 @@ import java.util.Map;
 
 public class BlockStore<T extends PersistentBlock> {
     private final Gson gson;
-    private final File dataFile;
+    private final File dataDirectory;
     private final Material material;
 
-    private Map<Location, T> blocks = new HashMap<>();
+//    private Map<Location, T> blocks = new HashMap<>();
+    private Map<Chunk, Map<Location, T>> blockedChunks = new HashMap<>();
 
-    public BlockStore(JavaPlugin plugin, Material material, File dataFile) {
-        this.dataFile = dataFile;
+    public BlockStore(JavaPlugin plugin, Material material, File dataDirectory) {
+        this.dataDirectory = dataDirectory;
         this.material = material;
         this.gson = new GsonBuilder().registerTypeAdapter(Location.class, new LocationAdapter()).create();
 
@@ -34,28 +36,59 @@ public class BlockStore<T extends PersistentBlock> {
         load();
     }
 
+    //
+    // Chunks
+    //
+    private File getChunkFile(Chunk chunk) {
+        return new File(dataDirectory, chunk.getWorld().getUID().toString() + File.separator + chunk.getX() + "," + chunk.getZ());
+    }
+
+    public void loadChunk(Chunk chunk) {
+        File chunkFile = getChunkFile(chunk);
+        if(!chunkFile.exists()) {
+            return;
+        }
+
+        chunkFile
+    }
+
+    public void unloadChunk(Chunk chunk) {
+
+    }
 
     //
     // Public
     //
     public T get(Location location) {
-        return blocks.get(location);
+        if(!blockedChunks.containsKey(location.getChunk())) {
+            return null;
+        }
+
+        return blockedChunks.get(location.getChunk()).get(location);
     }
     public T get(Block block) {
         return get(block.getLocation());
     }
 
     public void add(T block) {
-        blocks.put(block.getLocation(), block);
+        if(!blockedChunks.containsKey(block.getLocation().getChunk())) {
+            loadChunk(block.getLocation().getChunk());
+        }
+
+        blockedChunks.get(block.getLocation().getChunk()).put(block.getLocation(), block);
     }
 
     public T remove(Location location) {
-        return blocks.remove(location);
+        if(!blockedChunks.containsKey(location.getChunk())) {
+            return null;
+        }
+
+        return blockedChunks.get(location.getChunk()).remove(location);
     }
-    public T remove(T block) { return blocks.remove(block.getLocation()); }
+    public T remove(T block) { return remove(block.getLocation()); }
 
     public boolean has(Location location) {
-        return blocks.containsKey(location);
+        return blockedChunks.containsKey(location.getChunk()) && blockedChunks.get(location.getChunk()).containsKey(location);
     }
 
     public Material getMaterial() {
@@ -63,7 +96,7 @@ public class BlockStore<T extends PersistentBlock> {
     }
 
     public boolean isValidBlock(Block block) {
-        return (block.getType() == material && blocks.get(block.getLocation()) != null);
+        return (block.getType() == material && has(block.getLocation()));
     }
 
     //
