@@ -30,6 +30,7 @@ repositories {
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
     maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.aikar.co/content/groups/aikar/' }
     maven {
         name = 'codemc-repo'
         url = 'https://repo.codemc.io/repository/maven-public/'
@@ -37,36 +38,46 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.8.6'
-
     testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
     compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
 
     compile 'com.github.stefvanschie.inventoryframework:IF:0.5.19'
-//    compile 'net.sothatsit:blockstore:1.5.0'
+    compile 'com.github.MilkBowl:VaultAPI:1.7'
+//    compile group: 'de.tr7zw', name: 'item-nbt-api-plugin', version: '2.3.1'
+    compile 'de.tr7zw:item-nbt-api-plugin:2.3.1'
+    compile 'co.aikar:acf-bukkit:0.5.0-SNAPSHOT'
 
-    compile group: 'de.tr7zw', name: 'item-nbt-api-plugin', version: '2.3.1'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 
 shadowJar {
+    doFirst {
+        exclude 'fonts/*.csv'
+    }
+
     dependencies {
         include dependency("de.tr7zw:item-nbt-api-plugin:2.3.1")
         include dependency("com.github.stefvanschie.inventoryframework:IF:0.5.19")
-//        include dependency("net.sothatsit:blockstore:1.5.0")
+        include dependency("co.aikar:acf-bukkit:0.5.0-SNAPSHOT")
     }
-    relocate("de.tr7zw", "shaded.de.tr7zw")
+    relocate 'de.tr7zw', 'org.openspigot.openfarming.shaded.tr7zw'
+    relocate 'com.github.stefvanschie', 'org.openspigot.openfarming.shaded.stefvanschie'
+
+    relocate 'co.aikar.commands', 'org.openspigot.acf'
+    relocate 'co.aikar.locales', 'org.openspigot.locales'
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
+tasks.build.dependsOn(shadowJar)
 
+import org.apache.tools.ant.filters.ReplaceTokens
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: version]
     }
 }
 
-tasks.build.dependsOn(shadowJar)
 
 task copyJar(type: Copy) {
     from shadowJar

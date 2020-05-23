@@ -1,5 +1,6 @@
 package org.openspigot.openfarming.listener;
 
+import org.bukkit.block.BlockFace;
 import org.openspigot.openfarming.OpenFarming;
 import org.openspigot.openfarming.farm.FarmBlock;
 import org.bukkit.Material;
@@ -19,6 +20,11 @@ public class BlockFadeListener implements Listener {
     @EventHandler
     public void onBlockFade(BlockFadeEvent event) {
         if(event.getBlock().getType() != Material.FARMLAND) {
+            return;
+        }
+
+        // Don't allow blocks above farmland
+        if(event.getBlock().getRelative(BlockFace.UP).getType() != Material.AIR) {
             return;
         }
 

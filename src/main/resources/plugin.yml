@@ -3,9 +3,4 @@ version: @version@
 main: org.openspigot.openfarming.OpenFarming
 api-version: 1.13
 authors: [LegendEffects]
-website: openspigot.github.io
-
-commands:
-  openfarming:
-    description: Main OpenFarming Command
-    usage: /<command>
+website: openspigot.org

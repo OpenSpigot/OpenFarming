@@ -1,12 +1,16 @@
 package org.openspigot.openfarming;
 
+import co.aikar.commands.BukkitCommandManager;
 import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.openspigot.openfarming.command.OpenFarmingCommand;
 import org.openspigot.openfarming.database.BlockStore;
+import org.openspigot.openfarming.database.driver.FileDriver;
 import org.openspigot.openfarming.farm.FarmBlock;
 import org.openspigot.openfarming.farm.FarmType;
 import org.openspigot.openfarming.level.LevelManager;
 import org.openspigot.openfarming.listener.BlockFadeListener;
+import org.openspigot.openfarming.listener.BlockGrowListener;
 import org.openspigot.openfarming.listener.BlockPlaceListener;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,8 +19,11 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.openspigot.openfarming.util.ConfigWrapper;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public final class OpenFarming extends JavaPlugin {
     // Constants
@@ -24,23 +31,43 @@ public final class OpenFarming extends JavaPlugin {
 
     private static OpenFarming instance;
 
-    private final LevelManager levelManager = new LevelManager();
+    private ConfigWrapper config;
+    private LevelManager levelManager;
     private BlockStore<FarmBlock> farmStore;
 
     @Override
     public void onEnable() {
         instance = this;
+
         getDataFolder().mkdirs();
+        this.config = new ConfigWrapper(this, "config.yml");
+
+        // Load Levels
+        this.levelManager = new LevelManager();
+        this.levelManager.loadLevels(getConfig().getConfigurationSection("levels"));
+
+        // Setup block persistence
+        FileDriver fileDriver = new FileDriver(new File(getDataFolder(), "blockstore"));
+        this.farmStore = new BlockStore<>(this, FARM_MATERIAL, FarmBlock.class, "farms", fileDriver);
 
         // Register Commands
-        getCommand("openfarming").setExecutor(new OpenFarmingCommand(this));
+        BukkitCommandManager commandManager = new BukkitCommandManager(this);
+        commandManager.enableUnstableAPI("help");
+        commandManager.getCommandCompletions().registerAsyncCompletion("level", c ->
+                levelManager.getLevels().keySet().stream().map(String::valueOf).collect(Collectors.toCollection(HashSet::new))
+        );
 
-        File farmFolder = new File(getDataFolder(), "farms");
-        this.farmStore = new BlockStore<>(this, FARM_MATERIAL, FarmBlock.class, farmFolder);
+        commandManager.registerCommand(new OpenFarmingCommand(this));
 
         // Register Listeners
         new BlockPlaceListener(this);
         new BlockFadeListener(this);
+        new BlockGrowListener(this);
+    }
+
+    @Override
+    public void onDisable() {
+        farmStore.saveAll();
     }
 
     //
@@ -114,7 +141,13 @@ public final class OpenFarming extends JavaPlugin {
         return farmStore;
     }
 
+    @Override
+    public FileConfiguration getConfig() {
+        return config.getRaw();
+    }
+
     public static OpenFarming getInstance() {
         return instance;
     }
+
 }

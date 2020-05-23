@@ -22,7 +22,7 @@ public class FarmBlock extends PersistentBlock {
     private FarmType type;
     private UUID owner;
 
-    private transient FarmOverview farmOverview = new FarmOverview(this);
+    private transient FarmOverview farmOverview;
 
     //
     // Constructors
@@ -33,8 +33,6 @@ public class FarmBlock extends PersistentBlock {
         this.level = level;
         this.type = type;
         this.owner = owner;
-
-        till();
     }
 
     public FarmBlock(Location location, FarmLevel level, FarmType type, UUID owner) {
@@ -69,7 +67,10 @@ public class FarmBlock extends PersistentBlock {
                 }, (Math.abs(lx) + Math.abs(lz)) * 2);
             }
         }
+    }
 
+    public void harvest(Block block) {
+        block.setType(Material.AIR);
     }
 
     //
@@ -78,6 +79,7 @@ public class FarmBlock extends PersistentBlock {
     @Override
     public void init() {
         this.farmOverview = new FarmOverview(this);
+        till();
     }
 
     @Override
@@ -86,6 +88,7 @@ public class FarmBlock extends PersistentBlock {
             return;
         }
 
+        event.setCancelled(true);
         farmOverview.show(event.getPlayer());
     }
 
@@ -107,5 +110,9 @@ public class FarmBlock extends PersistentBlock {
 
     public UUID getOwner() {
         return owner;
+    }
+
+    public boolean isMaxLevel() {
+        return (level >= OpenFarming.getInstance().getLevelManager().getHighestLevel().getLevel());
     }
 }

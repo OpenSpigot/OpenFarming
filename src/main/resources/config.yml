@@ -1,0 +1,84 @@
+# Available Variables
+# {FARM-LEVEL}
+# {FARM-RADIUS}
+# {FARM-SPEED}
+# {FARM-EXPCOST}
+# {FARM-ECOCOST}
+# {FARM-PAGES}
+# {FARM-TYPE}
+# {FARM-REPLANT}
+#
+# {FARM-NEXTLEVEL}
+# {FARM-NEXTLEVEL-RADIUS}
+# {FARM-NEXTLEVEL-SPEED}
+# {FARM-NEXTLEVEL-EXPCOST}
+# {FARM-NEXTLEVEL-ECOCOST}
+# {FARM-NEXTLEVEL-PAGES}
+# {FARM-NEXTLEVEL-TYPE}
+# {FARM-NEXTLEVEL-REPLANT}
+
+messages:
+  types:
+    crop: "Crop"
+    animal: "Livestock"
+    all: "Multi Function"
+
+levels:
+  1:
+    radius: 1
+    speed: 1
+    expCost: 25
+    ecoCost: 25
+    pages: 1
+    replant: false
+  2:
+    radius: 2
+    speed: 1.25
+    expCost: 50
+    ecoCost: 50
+    pages: 1
+    replant: false
+  3:
+    radius: 3
+    speed: 1.5
+    expCost: 75
+    ecoCost: 75
+    pages: 2
+    replant: true
+  4:
+    radius: 4
+    speed: 1.75
+    expCost: 100
+    ecoCost: 100
+    pages: 2
+    replant: true
+
+item:
+  title: "&6Tier &f{FARM-LEVEL} {FARM-TYPE} &6Farm"
+
+gui:
+  overview:
+    title: "&6Tier &f{FARM-LEVEL} &f{FARM-TYPE} &6Farm"
+
+    lore:
+      - ""
+      - "&eRadius: &f{FARM-RADIUS} &eBlocks"
+      - "&eSpeed: &f{FARM-SPEED}x"
+      - "&eAuto Replant: &f{FARM-REPLANT}"
+      - ""
+      - ""
+      - "&6Next Tier &f{FARM-NEXTLEVEL}"
+      - "&eRadius: &f{FARM-NEXTLEVEL-RADIUS}"
+      - "&eSpeed: &f{FARM-NEXTLEVEL-SPEED}x"
+      - "&eAuto Replant: &f{FARM-NEXTLEVEL-REPLANT}"
+    loreMaxLevel:
+      - ""
+      - "&eRadius: &f{FARM-RADIUS} &eBlocks"
+      - "&eSpeed: &f{FARM-SPEED}x"
+      - "&eAuto Replant: &f{FARM-REPLANT}"
+      - ""
+      - ""
+      - "&6MAX Tier Reached"
+
+  expUpgrade:
+    enabled: true
