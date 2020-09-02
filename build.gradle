@@ -45,9 +45,8 @@ dependencies {
 
     compile 'com.github.stefvanschie.inventoryframework:IF:0.5.19'
     compile 'com.github.MilkBowl:VaultAPI:1.7'
-//    compile group: 'de.tr7zw', name: 'item-nbt-api-plugin', version: '2.3.1'
-    compile 'de.tr7zw:item-nbt-api-plugin:2.3.1'
-    compile 'co.aikar:acf-bukkit:0.5.0-SNAPSHOT'
+    compile 'de.tr7zw:item-nbt-api-plugin:2.5.0'
+    compile 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
@@ -58,9 +57,9 @@ shadowJar {
     }
 
     dependencies {
-        include dependency("de.tr7zw:item-nbt-api-plugin:2.3.1")
+        include dependency("de.tr7zw:item-nbt-api-plugin:2.5.0")
         include dependency("com.github.stefvanschie.inventoryframework:IF:0.5.19")
-        include dependency("co.aikar:acf-bukkit:0.5.0-SNAPSHOT")
+        include dependency("co.aikar:acf-paper:0.5.0-SNAPSHOT")
     }
     relocate 'de.tr7zw', 'org.openspigot.openfarming.shaded.tr7zw'
     relocate 'com.github.stefvanschie', 'org.openspigot.openfarming.shaded.stefvanschie'

@@ -23,62 +23,68 @@ messages:
     animal: "Livestock"
     all: "Multi Function"
 
-levels:
-  1:
-    radius: 1
-    speed: 1
-    expCost: 25
-    ecoCost: 25
-    pages: 1
-    replant: false
-  2:
-    radius: 2
-    speed: 1.25
-    expCost: 50
-    ecoCost: 50
-    pages: 1
-    replant: false
-  3:
-    radius: 3
-    speed: 1.5
-    expCost: 75
-    ecoCost: 75
-    pages: 2
-    replant: true
-  4:
-    radius: 4
-    speed: 1.75
-    expCost: 100
-    ecoCost: 100
-    pages: 2
-    replant: true
-
 item:
-  title: "&6Tier &f{FARM-LEVEL} {FARM-TYPE} &6Farm"
+  title: "&eAutomated &9&l{FARM-TYPE} &r&eFarm"
 
 gui:
   overview:
-    title: "&6Tier &f{FARM-LEVEL} &f{FARM-TYPE} &6Farm"
+    title: "&eAutomated &f&l{FARM-TYPE} &r&eFarm"
 
     lore:
       - ""
-      - "&eRadius: &f{FARM-RADIUS} &eBlocks"
+      - "&eRadius: &f{FARM-RADIUS} Blocks"
       - "&eSpeed: &f{FARM-SPEED}x"
       - "&eAuto Replant: &f{FARM-REPLANT}"
       - ""
-      - ""
-      - "&6Next Tier &f{FARM-NEXTLEVEL}"
-      - "&eRadius: &f{FARM-NEXTLEVEL-RADIUS}"
-      - "&eSpeed: &f{FARM-NEXTLEVEL-SPEED}x"
-      - "&eAuto Replant: &f{FARM-NEXTLEVEL-REPLANT}"
     loreMaxLevel:
       - ""
-      - "&eRadius: &f{FARM-RADIUS} &eBlocks"
+      - "&eRadius: &f{FARM-RADIUS} Blocks"
       - "&eSpeed: &f{FARM-SPEED}x"
       - "&eAuto Replant: &f{FARM-REPLANT}"
       - ""
       - ""
       - "&6MAX Tier Reached"
 
-  expUpgrade:
+  radiusUpgrade:
+    material: COMPASS
+    name: "&eUpgrade Radius to &f{NEXT-RADIUS}"
+    lore:
+      - ""
+      - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
+      - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
+
     enabled: true
+    balCost: [100, 200, 300, 400, 500]
+    expCost: false
+
+  speedUpgrade:
+    material: SUGAR
+    name: "&eUpgrade Speed to &f{NEXT-SPEED}"
+    lore:
+      - ""
+      - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
+      - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
+
+    enabled: true
+    balCost: [ 50, 100, 150, 200, 250 ]
+    expCost: false
+
+  autoReplant:
+    material: SUNFLOWER
+
+    name: "&eAuto Replant"
+    purchased_name: "&eAuto Replant &8(&aPurchased&8)"
+
+    lore:
+      - ""
+      - "&7Automatically replants the seed for the crops."
+      - ""
+      - "&fLeft click &eto purchase for &f${NEXT-RADIUS-BALCOST}"
+      - "&fRight click &eto purchase for &f{NEXT-RADIUS-EXPCOST} &elevels"
+    purchased_lore:
+      - ""
+      - "&7Automatically replants the seed for the crops."
+
+    enabled: true
+    balCost: 2000
+    expCost: 20
