@@ -1,0 +1,6 @@
+name: OpenFarming
+version: @version@
+main: org.openspigot.openfarming.OpenFarming
+api-version: 1.13
+authors: [LegendEffects]
+website: openspigot.org

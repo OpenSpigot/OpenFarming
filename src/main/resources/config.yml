@@ -1,0 +1,90 @@
+# Available Variables
+# {FARM-LEVEL}
+# {FARM-RADIUS}
+# {FARM-SPEED}
+# {FARM-EXPCOST}
+# {FARM-ECOCOST}
+# {FARM-PAGES}
+# {FARM-TYPE}
+# {FARM-REPLANT}
+#
+# {FARM-NEXTLEVEL}
+# {FARM-NEXTLEVEL-RADIUS}
+# {FARM-NEXTLEVEL-SPEED}
+# {FARM-NEXTLEVEL-EXPCOST}
+# {FARM-NEXTLEVEL-ECOCOST}
+# {FARM-NEXTLEVEL-PAGES}
+# {FARM-NEXTLEVEL-TYPE}
+# {FARM-NEXTLEVEL-REPLANT}
+
+messages:
+  types:
+    crop: "Crop"
+    animal: "Livestock"
+    all: "Multi Function"
+
+item:
+  title: "&eAutomated &9&l{FARM-TYPE} &r&eFarm"
+
+gui:
+  overview:
+    title: "&eAutomated &f&l{FARM-TYPE} &r&eFarm"
+
+    lore:
+      - ""
+      - "&eRadius: &f{FARM-RADIUS} Blocks"
+      - "&eSpeed: &f{FARM-SPEED}x"
+      - "&eAuto Replant: &f{FARM-REPLANT}"
+      - ""
+    loreMaxLevel:
+      - ""
+      - "&eRadius: &f{FARM-RADIUS} Blocks"
+      - "&eSpeed: &f{FARM-SPEED}x"
+      - "&eAuto Replant: &f{FARM-REPLANT}"
+      - ""
+      - ""
+      - "&6MAX Tier Reached"
+
+  radiusUpgrade:
+    material: COMPASS
+    name: "&eUpgrade Radius to &f{NEXT-RADIUS}"
+    lore:
+      - ""
+      - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
+      - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
+
+    enabled: true
+    balCost: [100, 200, 300, 400, 500]
+    expCost: false
+
+  speedUpgrade:
+    material: SUGAR
+    name: "&eUpgrade Speed to &f{NEXT-SPEED}"
+    lore:
+      - ""
+      - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
+      - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
+
+    enabled: true
+    balCost: [ 50, 100, 150, 200, 250 ]
+    expCost: false
+
+  autoReplant:
+    material: SUNFLOWER
+
+    name: "&eAuto Replant"
+    purchased_name: "&eAuto Replant &8(&aPurchased&8)"
+
+    lore:
+      - ""
+      - "&7Automatically replants the seed for the crops."
+      - ""
+      - "&fLeft click &eto purchase for &f${NEXT-RADIUS-BALCOST}"
+      - "&fRight click &eto purchase for &f{NEXT-RADIUS-EXPCOST} &elevels"
+    purchased_lore:
+      - ""
+      - "&7Automatically replants the seed for the crops."
+
+    enabled: true
+    balCost: 2000
+    expCost: 20

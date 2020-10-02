@@ -1,0 +1,86 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+group = pluginGroup
+version = pluginVersion
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+    maven {
+        name = 'codemc-repo'
+        url = 'https://repo.codemc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+    compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
+
+    compile 'com.github.stefvanschie.inventoryframework:IF:0.5.19'
+    compile 'com.github.MilkBowl:VaultAPI:1.7'
+    compile 'de.tr7zw:item-nbt-api-plugin:2.5.0'
+    compile 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+}
+
+shadowJar {
+    doFirst {
+        exclude 'fonts/*.csv'
+    }
+
+    dependencies {
+        include dependency("de.tr7zw:item-nbt-api-plugin:2.5.0")
+        include dependency("com.github.stefvanschie.inventoryframework:IF:0.5.19")
+        include dependency("co.aikar:acf-paper:0.5.0-SNAPSHOT")
+    }
+    relocate 'de.tr7zw', 'org.openspigot.openfarming.shaded.tr7zw'
+    relocate 'com.github.stefvanschie', 'org.openspigot.openfarming.shaded.stefvanschie'
+
+    relocate 'co.aikar.commands', 'org.openspigot.acf'
+    relocate 'co.aikar.locales', 'org.openspigot.locales'
+}
+
+tasks.build.dependsOn(shadowJar)
+
+import org.apache.tools.ant.filters.ReplaceTokens
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+
+
+task copyJar(type: Copy) {
+    from shadowJar
+    into 'D:\\Development\\OpenSpigot\\Server Files\\OpenFarming\\plugins'
+}
+
+tasks.build.finalizedBy(copyJar)
