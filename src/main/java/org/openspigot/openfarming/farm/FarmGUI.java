@@ -16,38 +16,24 @@ import org.openspigot.openfarming.util.LangUtils;
 public class FarmGUI extends Gui {
     private final FarmBlock owner;
 
-    private final StaticPane headerPane;
-    private final PaginatedPane inventoryPane;
-
-    private GuiItem overview, upgradeAutoReplant, upgradeRadius, upgradeSpeed;
-
     public FarmGUI(FarmBlock owner) {
         super(OpenFarming.getInstance(), 6, "Farm Overview");
-        OpenFarming plugin = OpenFarming.getInstance();
-
         this.owner = owner;
 
         // UI
-        this.headerPane = new StaticPane(0, 0, 9, 3);
-        this.inventoryPane = new PaginatedPane(0, 2, 9, 3);
+        StaticPane headerPane = new StaticPane(0, 0, 9, 3);
+        PaginatedPane inventoryPane = new PaginatedPane(0, 2, 9, 3);
 
         //
         // Configure Panes
         //
-        headerPane.fillWith(new ItemStack(Material.BLACK_STAINED_GLASS_PANE), inventoryClickEvent -> {
-            inventoryClickEvent.setCancelled(true);
-        });
+        headerPane.fillWith(new ItemStack(Material.BLACK_STAINED_GLASS_PANE), inventoryClickEvent -> inventoryClickEvent.setCancelled(true));
 
-        overview = createOverviewItem();
-        upgradeAutoReplant = createReplantUpgradeItem();
-        upgradeRadius = createUpgradeRadiusItem();
-        upgradeSpeed = createUpgradeSpeedItem();
+        headerPane.addItem(createOverviewItem(), 1, 1);
 
-        headerPane.addItem(overview, 1, 1);
-
-        headerPane.addItem(upgradeAutoReplant, 5, 1);
-        headerPane.addItem(upgradeRadius, 6, 1);
-        headerPane.addItem(upgradeSpeed, 7, 1);
+        headerPane.addItem(createReplantUpgradeItem(), 5, 1);
+        headerPane.addItem(createUpgradeRadiusItem(), 6, 1);
+        headerPane.addItem(createUpgradeSpeedItem(), 7, 1);
 
         addPane(headerPane);
         addPane(inventoryPane);
@@ -79,9 +65,7 @@ public class FarmGUI extends Gui {
 
         item.setItemMeta(meta);
 
-        return new GuiItem(item, (inventoryClickEvent -> {
-            inventoryClickEvent.setCancelled(true);
-        }));
+        return new GuiItem(item, (inventoryClickEvent -> inventoryClickEvent.setCancelled(true)));
     }
 
     private GuiItem createReplantUpgradeItem() {
@@ -103,9 +87,7 @@ public class FarmGUI extends Gui {
 
         item.setItemMeta(meta);
 
-        return new GuiItem(item, (inventoryClickEvent -> {
-            inventoryClickEvent.setCancelled(true);
-        }));
+        return new GuiItem(item, (inventoryClickEvent -> inventoryClickEvent.setCancelled(true)));
     }
 
     private GuiItem createUpgradeRadiusItem() {
@@ -124,9 +106,7 @@ public class FarmGUI extends Gui {
 
         item.setItemMeta(meta);
 
-        return new GuiItem(item, (inventoryClickEvent -> {
-            inventoryClickEvent.setCancelled(true);
-        }));
+        return new GuiItem(item, (inventoryClickEvent -> inventoryClickEvent.setCancelled(true)));
     }
 
     private GuiItem createUpgradeSpeedItem() {
@@ -145,8 +125,6 @@ public class FarmGUI extends Gui {
 
         item.setItemMeta(meta);
 
-        return new GuiItem(item, (inventoryClickEvent -> {
-            inventoryClickEvent.setCancelled(true);
-        }));
+        return new GuiItem(item, (inventoryClickEvent -> inventoryClickEvent.setCancelled(true)));
     }
 }
