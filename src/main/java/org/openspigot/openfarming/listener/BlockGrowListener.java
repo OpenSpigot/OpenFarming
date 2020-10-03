@@ -28,7 +28,10 @@ public class BlockGrowListener implements Listener {
             if(newData.getMaximumAge() == newData.getAge()) {
                 event.getBlock().setBlockData(newData);
                 System.out.println(event.getBlock().getDrops());
-                block.harvest(event.getBlock());
+
+                newData.setAge(0);
+                event.getBlock().setBlockData(newData);
+
                 event.setCancelled(true);
             }
         }

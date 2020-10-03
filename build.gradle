@@ -41,9 +41,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     implementation 'com.google.code.gson:gson:2.8.6'
-    compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
 
-    compile 'com.github.stefvanschie.inventoryframework:IF:0.5.19'
+    compileOnly 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+
+    compile 'com.github.stefvanschie.inventoryframework:IF:0.7.2'
     compile 'com.github.MilkBowl:VaultAPI:1.7'
     compile 'de.tr7zw:item-nbt-api-plugin:2.5.0'
     compile 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
@@ -58,7 +60,7 @@ shadowJar {
 
     dependencies {
         include dependency("de.tr7zw:item-nbt-api-plugin:2.5.0")
-        include dependency("com.github.stefvanschie.inventoryframework:IF:0.5.19")
+        include dependency("com.github.stefvanschie.inventoryframework:IF:0.7.2")
         include dependency("co.aikar:acf-paper:0.5.0-SNAPSHOT")
     }
     relocate 'de.tr7zw', 'org.openspigot.openfarming.shaded.tr7zw'

@@ -1,21 +1,25 @@
 package org.openspigot.openfarming;
 
 import co.aikar.commands.PaperCommandManager;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.openspigot.openfarming.command.OpenFarmingCommand;
 import org.openspigot.openfarming.database.BlockStore;
 import org.openspigot.openfarming.database.driver.FileDriver;
 import org.openspigot.openfarming.farm.FarmBlock;
+import org.openspigot.openfarming.farm.upgrades.FarmUpgrades;
 import org.openspigot.openfarming.listener.BlockFadeListener;
 import org.openspigot.openfarming.listener.BlockGrowListener;
 import org.openspigot.openfarming.listener.BlockPlaceListener;
 import org.openspigot.openfarming.util.ConfigWrapper;
 
 import java.io.File;
+import java.util.logging.Level;
 
 public final class OpenFarming extends JavaPlugin {
     //
@@ -31,6 +35,7 @@ public final class OpenFarming extends JavaPlugin {
 
     private ConfigWrapper config;
     private BlockStore<FarmBlock> farmBlockStore;
+    private Economy economy = null;
 
     //
     // Enable
@@ -42,6 +47,11 @@ public final class OpenFarming extends JavaPlugin {
 
         // Load Config
         this.config = new ConfigWrapper(this, "config.yml");
+
+        // Vault Hook
+        if(!setupEconomy()) {
+            getLogger().log(Level.WARNING, "Vault isn't installed, economy will not be supported.");
+        }
 
         // Setup Block Persistence
         FileDriver fileDriver = new FileDriver(new File(getDataFolder(), "farms"));
@@ -58,6 +68,18 @@ public final class OpenFarming extends JavaPlugin {
         new BlockGrowListener(this);
     }
 
+    private boolean setupEconomy() {
+        if(getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if(rsp == null) return false;
+
+        this.economy = rsp.getProvider();
+        return true;
+    }
+
     //
     // Public
     //
@@ -70,8 +92,9 @@ public final class OpenFarming extends JavaPlugin {
                 Block lBlock = location.getWorld().getBlockAt(location.getBlockX() + lx, location.getBlockY() + yOffset, location.getBlockZ() + lz);
                 if (farmBlockStore.isValidBlock(lBlock)) {
                     FarmBlock checkBlock = farmBlockStore.get(lBlock);
+                    int radius = FarmUpgrades.RADIUS_UPGRADE.getLevel(checkBlock.getRadius() + 1).getValue();
 
-                    if (Math.abs(lx) <= checkBlock.getRadius() && Math.abs(lz) <= checkBlock.getRadius()) {
+                    if(Math.abs(lx) <= radius && Math.abs(lz) <= radius) {
                         return checkBlock;
                     }
                 }
@@ -98,6 +121,10 @@ public final class OpenFarming extends JavaPlugin {
 
     public static OpenFarming getInstance() {
         return instance;
+    }
+
+    public Economy getEconomy() {
+        return economy;
     }
 
     @Override

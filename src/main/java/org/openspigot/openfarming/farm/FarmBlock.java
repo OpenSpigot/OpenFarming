@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.openspigot.openfarming.OpenFarming;
 import org.openspigot.openfarming.database.PersistentBlock;
+import org.openspigot.openfarming.farm.upgrades.FarmUpgrade;
+import org.openspigot.openfarming.farm.upgrades.FarmUpgrades;
 
 import java.util.UUID;
 
@@ -17,8 +19,9 @@ public class FarmBlock extends PersistentBlock {
     private int speed;
     private boolean replant;
 
-    private UUID owner;
-    private FarmType type;
+
+    private final UUID owner;
+    private final FarmType type;
 
     private transient FarmGUI gui;
 
@@ -97,15 +100,11 @@ public class FarmBlock extends PersistentBlock {
         return speed >= OpenFarming.getInstance().maxUpgradeAmount("gui.speedUpgrade");
     }
 
+
     //
     // Getters
     //
     public int getRadius() {
-        if(isMaxRadius()) {
-            // Lock to the max radius achievable in the config
-            return OpenFarming.getInstance().maxUpgradeAmount("gui.radiusUpgrade");
-        }
-
         return radius;
     }
 
@@ -129,4 +128,21 @@ public class FarmBlock extends PersistentBlock {
     public FarmType getType() {
         return type;
     }
+
+
+    //
+    // Setters
+    //
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public void setReplant(boolean replant) {
+        this.replant = replant;
+    }
+
 }

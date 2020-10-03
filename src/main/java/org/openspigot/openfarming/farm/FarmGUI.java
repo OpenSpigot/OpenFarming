@@ -17,7 +17,7 @@ public class FarmGUI extends Gui {
     private final FarmBlock owner;
 
     public FarmGUI(FarmBlock owner) {
-        super(OpenFarming.getInstance(), 6, "Farm Overview");
+        super(6, "Farm Overview");
         this.owner = owner;
 
         // UI
@@ -77,9 +77,7 @@ public class FarmGUI extends Gui {
         if(owner.isReplant()) {
             meta.setDisplayName(LangUtils.parseFarmMessage(plugin.getConfig().getString("gui.autoReplant.purchased_name", ""), owner));
             meta.setLore(LangUtils.parseFarmLore(plugin.getConfig().getStringList("gui.autoReplant.purchased_lore"), owner));
-
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+            addEnchantEffect(meta);
         } else {
             meta.setDisplayName(LangUtils.parseFarmMessage(plugin.getConfig().getString("gui.autoReplant.name", ""), owner));
             meta.setLore(LangUtils.parseFarmLore(plugin.getConfig().getStringList("gui.autoReplant.lore"), owner));
@@ -100,8 +98,7 @@ public class FarmGUI extends Gui {
         meta.setLore(LangUtils.parseFarmLore(plugin.getConfig().getStringList("gui.radiusUpgrade.lore"), owner));
 
         if(owner.isMaxRadius()) {
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+            addEnchantEffect(meta);
         }
 
         item.setItemMeta(meta);
@@ -119,12 +116,19 @@ public class FarmGUI extends Gui {
         meta.setLore(LangUtils.parseFarmLore(plugin.getConfig().getStringList("gui.speedUpgrade.lore"), owner));
 
         if(owner.isMaxSpeed()) {
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+            addEnchantEffect(meta);
         }
 
         item.setItemMeta(meta);
 
         return new GuiItem(item, (inventoryClickEvent -> inventoryClickEvent.setCancelled(true)));
+    }
+
+    //
+    // Utility
+    //
+    private static void addEnchantEffect(ItemMeta meta) {
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
     }
 }

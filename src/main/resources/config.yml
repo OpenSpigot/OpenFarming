@@ -26,6 +26,26 @@ messages:
 item:
   title: "&eAutomated &9&l{FARM-TYPE} &r&eFarm"
 
+upgrades:
+  radius:
+    enabled: true
+    levels:
+      0: # DEFAULT LEVEL
+        value: 4
+      1:
+        value: 5
+        ecoCost: 100
+        expCost: 100
+      2:
+        value: 6
+        ecoCost: 200
+        expCost: false
+      3:
+        value: 7
+        ecoCost: 300
+        expCost: false
+
+
 gui:
   overview:
     title: "&eAutomated &f&l{FARM-TYPE} &r&eFarm"
@@ -53,17 +73,13 @@ gui:
       - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
       - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
 
-    enabled: true
-    balCost: [100, 200, 300, 400, 500]
-    expCost: false
-
   speedUpgrade:
     material: SUGAR
     name: "&eUpgrade Speed to &f{NEXT-SPEED}"
     lore:
       - ""
-      - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
-      - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
+      - "&fLeft click &eto upgrade for &f${NEXT-SPEED-BALCOST}"
+      - "&fRight click &eto upgrade for &f{NEXT-SPEED-EXPCOST} &elevels"
 
     enabled: true
     balCost: [ 50, 100, 150, 200, 250 ]
@@ -79,8 +95,8 @@ gui:
       - ""
       - "&7Automatically replants the seed for the crops."
       - ""
-      - "&fLeft click &eto purchase for &f${NEXT-RADIUS-BALCOST}"
-      - "&fRight click &eto purchase for &f{NEXT-RADIUS-EXPCOST} &elevels"
+      - "&fLeft click &eto purchase for &f${REPLANT-BALCOST}"
+      - "&fRight click &eto purchase for &f{REPLANT-EXPCOST} &elevels"
     purchased_lore:
       - ""
       - "&7Automatically replants the seed for the crops."
