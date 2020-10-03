@@ -5,12 +5,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.openspigot.openfarming.OpenFarming;
 import org.openspigot.openfarming.database.PersistentBlock;
-import org.openspigot.openfarming.farm.upgrades.FarmUpgrade;
 import org.openspigot.openfarming.farm.upgrades.FarmUpgrades;
+import org.openspigot.openfarming.util.LangUtils;
 
 import java.util.UUID;
 
@@ -18,7 +20,6 @@ public class FarmBlock extends PersistentBlock {
     private int radius;
     private int speed;
     private boolean replant;
-
 
     private final UUID owner;
     private final FarmType type;
@@ -61,6 +62,27 @@ public class FarmBlock extends PersistentBlock {
         gui.show(event.getPlayer());
     }
 
+    @Override
+    public void onBlockPlace(BlockPlaceEvent event) {
+        event.getPlayer().sendMessage(LangUtils.parse("messages.placed", event.getPlayer()));
+    }
+
+    @Override
+    public void onBreak(BlockBreakEvent event) {
+        // Prevent breaking if they're not the owner.
+        if(!event.getPlayer().getUniqueId().equals(owner)) {
+            event.getPlayer().sendMessage(LangUtils.parse("messages.locked", event.getPlayer()));
+            event.setCancelled(true);
+        }
+
+        event.getPlayer().sendMessage(LangUtils.parse("messages.broken", event.getPlayer()));
+        event.setDropItems(false);
+        location.getWorld().dropItemNaturally(location, new FarmItem(type, radius, speed, replant).build());
+
+        store.remove(location);
+    }
+
+
     //
     // Public
     //
@@ -68,6 +90,8 @@ public class FarmBlock extends PersistentBlock {
         if(type == FarmType.ANIMAL) {
             return;
         }
+
+        int radius = FarmUpgrades.RADIUS_UPGRADE.getValue(this);
 
         for(int lx = -radius; lx <= radius; lx++) {
             for(int lz = -radius; lz <= radius; lz++) {
@@ -89,38 +113,9 @@ public class FarmBlock extends PersistentBlock {
         }
     }
 
-    public void harvest(Block block) {
-        block.setType(Material.AIR);
-    }
-
-    public boolean isMaxRadius() {
-        return radius >= OpenFarming.getInstance().maxUpgradeAmount("gui.radiusUpgrade");
-    }
-    public boolean isMaxSpeed() {
-        return speed >= OpenFarming.getInstance().maxUpgradeAmount("gui.speedUpgrade");
-    }
-
-
     //
     // Getters
     //
-    public int getRadius() {
-        return radius;
-    }
-
-    public int getSpeed() {
-        if(isMaxSpeed()) {
-            // Lock to the max speed achievable in the config
-            return OpenFarming.getInstance().maxUpgradeAmount("gui.speedUpgrade");
-        }
-
-        return speed;
-    }
-
-    public boolean isReplant() {
-        return replant;
-    }
-
     public UUID getOwner() {
         return owner;
     }
@@ -129,6 +124,17 @@ public class FarmBlock extends PersistentBlock {
         return type;
     }
 
+    public int getRadius() {
+        return radius;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public boolean isReplant() {
+        return replant;
+    }
 
     //
     // Setters
@@ -144,5 +150,4 @@ public class FarmBlock extends PersistentBlock {
     public void setReplant(boolean replant) {
         this.replant = replant;
     }
-
 }

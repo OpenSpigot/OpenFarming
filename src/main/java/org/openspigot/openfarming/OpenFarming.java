@@ -81,10 +81,18 @@ public final class OpenFarming extends JavaPlugin {
     }
 
     //
+    // Disable
+    //
+    @Override
+    public void onDisable() {
+        farmBlockStore.saveAll();
+    }
+
+    //
     // Public
     //
     public FarmBlock findFarmBlock(Location location, int yOffset) {
-        int maxRadius = 5;
+        int maxRadius = FarmUpgrades.RADIUS_UPGRADE.getLevel(FarmUpgrades.RADIUS_UPGRADE.getMaxLevel()).getValue();
 
         for (int lx = -maxRadius; lx <= maxRadius; lx++) {
             for (int lz = -maxRadius; lz <= maxRadius; lz++) {
@@ -92,7 +100,7 @@ public final class OpenFarming extends JavaPlugin {
                 Block lBlock = location.getWorld().getBlockAt(location.getBlockX() + lx, location.getBlockY() + yOffset, location.getBlockZ() + lz);
                 if (farmBlockStore.isValidBlock(lBlock)) {
                     FarmBlock checkBlock = farmBlockStore.get(lBlock);
-                    int radius = FarmUpgrades.RADIUS_UPGRADE.getLevel(checkBlock.getRadius() + 1).getValue();
+                    int radius = FarmUpgrades.RADIUS_UPGRADE.getLevel(checkBlock.getRadius()).getValue();
 
                     if(Math.abs(lx) <= radius && Math.abs(lz) <= radius) {
                         return checkBlock;

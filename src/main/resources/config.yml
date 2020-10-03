@@ -22,6 +22,8 @@ messages:
     crop: "Crop"
     animal: "Livestock"
     all: "Multi Function"
+  locked: "You can't interact with this farm as you don't own it."
+  broken: "Farm broken."
 
 item:
   title: "&eAutomated &9&l{FARM-TYPE} &r&eFarm"
@@ -68,10 +70,14 @@ gui:
   radiusUpgrade:
     material: COMPASS
     name: "&eUpgrade Radius to &f{NEXT-RADIUS}"
+    nameMaxLevel: "&fMax &eRadius Reached"
     lore:
       - ""
       - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
       - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
+    loreMaxLevel:
+      - ""
+      - "&7Max Level Reached"
 
   speedUpgrade:
     material: SUGAR
