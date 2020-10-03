@@ -1,5 +1,6 @@
 package org.openspigot.openfarming.listener;
 
+import org.bukkit.Material;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,10 +28,14 @@ public class BlockGrowListener implements Listener {
 
             if(newData.getMaximumAge() == newData.getAge()) {
                 event.getBlock().setBlockData(newData);
-                System.out.println(event.getBlock().getDrops());
+//                System.out.println(event.getBlock().getDrops()); // GET DROPS
 
-                newData.setAge(0);
-                event.getBlock().setBlockData(newData);
+                if(block.isReplant()) {
+                    newData.setAge(0);
+                    event.getBlock().setBlockData(newData);
+                } else {
+                    event.getBlock().setType(Material.AIR);
+                }
 
                 event.setCancelled(true);
             }

@@ -15,41 +15,31 @@ import org.openspigot.openfarming.farm.FarmBlock;
 import org.openspigot.openfarming.farm.FarmGUI;
 import org.openspigot.openfarming.util.LangUtils;
 
-import java.util.ArrayList;
-
-public abstract class FarmUpgrade<T> implements IFarmUpgrade<T> {
+public abstract class FarmUpgradeBoolean implements IFarmUpgrade<Boolean> {
     private final String configReference;
-    private final ArrayList<FarmUpgradeLevel<T>> levels = new ArrayList<>();
+    private final FarmUpgradeLevel<Boolean> upgrade;
 
-    public FarmUpgrade(String configReference) {
+    public FarmUpgradeBoolean(String configReference) {
         this.configReference = configReference;
-        ConfigurationSection configLevels =  OpenFarming.getInstance().getConfig().getConfigurationSection("upgrades." + configReference + ".levels");
 
-        for(String key : configLevels.getKeys(false)) {
-            ConfigurationSection levelConfig = configLevels.getConfigurationSection(key);
-            if(levelConfig == null) continue;
-
-            levels.add(new FarmUpgradeLevel<T>(Integer.parseInt(key), (T)levelConfig.get("value"), levelConfig.getInt("ecoCost"), levelConfig.getInt("expCost")));
-        }
+        ConfigurationSection section = OpenFarming.getInstance().getConfig().getConfigurationSection("upgrades." + configReference);
+        this.upgrade = new FarmUpgradeLevel<>(1, true, section.getInt("ecoCost"), section.getInt("expCost"));
     }
 
-    // Expected Overrides
-    public abstract int getRawLevel(FarmBlock block);
-    public abstract void setRawLevel(FarmBlock block, int level);
-    protected void upgrade(Player player, FarmBlock block) {
-        setRawLevel(block, getRawLevel(block) + 1);
-    }
+    @Override
+    public abstract Boolean getValue(FarmBlock block);
+    public abstract void setValue(FarmBlock block, boolean value);
 
+    @Override
     public GuiItem createItem(FarmBlock block, FarmGUI gui, Material material) {
         OpenFarming plugin = OpenFarming.getInstance();
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
 
         ConfigurationSection section = plugin.getConfig().getConfigurationSection("gui." + configReference + "Upgrade");
-
-        if(isMaxLevel(getRawLevel(block))) {
-            meta.setDisplayName(LangUtils.parseFarmMessage(section.getString("nameMaxLevel"), block));
-            meta.setLore(LangUtils.parseFarmLore(section.getStringList("loreMaxLevel"), block));
+        if(getValue(block)) {
+            meta.setDisplayName(LangUtils.parseFarmMessage(section.getString("purchased_name"), block));
+            meta.setLore(LangUtils.parseFarmLore(section.getStringList("purchased_lore"), block));
 
             // Add enchant effect
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -73,54 +63,18 @@ public abstract class FarmUpgrade<T> implements IFarmUpgrade<T> {
         }));
     }
 
-    //
-    // Public
-    //
-    public FarmUpgradeLevel<T> getLevel(int level) {
-        // Get last available if too high of a level.
-        if(level >= levels.size()) {
-            return levels.get(levels.size() - 1);
-        }
-
-        return levels.get(level);
-    }
-    public FarmUpgradeLevel<T> getLevel(FarmBlock block) {
-        return getLevel(getRawLevel(block));
-    }
-
-
-    //
-    // Utility Getters
-    public T getValue(FarmBlock block) {
-        return getLevel(block).getValue();
-    }
-
-    public int getMaxLevel() {
-        return levels.size() - 1;
-    }
-
-    public boolean isMaxLevel(int level) {
-        return level >= getMaxLevel();
-    }
-
-    //
-    // Purchasing Upgrade
+    @Override
     public boolean purchaseWithBalance(Player player, FarmBlock block) {
-        int currentLevel = getRawLevel(block);
-
-        // Check if it's already the max level
-        if(isMaxLevel(currentLevel)) {
+        if(getValue(block)) {
+            // Already Upgraded
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
             return false;
         }
+
+        if(upgrade.getEcoCost() == 0) return false;
 
         Economy economy = OpenFarming.getInstance().getEconomy();
-        if(economy == null) return false;
-        int cost = getLevel(currentLevel + 1).getEcoCost();
-        if(cost == 0) return false;
-
-        // Check if the player has enough money
-        if(economy.getBalance(player) < cost) {
+        if(economy.getBalance(player) < upgrade.getEcoCost()) {
             // They can't afford the upgrade
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
             player.sendMessage(LangUtils.parse("messages.insufficient_funds", player));
@@ -129,24 +83,23 @@ public abstract class FarmUpgrade<T> implements IFarmUpgrade<T> {
 
         // Complete Purchase
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-        economy.withdrawPlayer(player, cost);
-        upgrade(player, block);
+        economy.withdrawPlayer(player, upgrade.getEcoCost());
+        purchase(player, block);
+
         return true;
     }
 
+    @Override
     public boolean purchaseWithExperience(Player player, FarmBlock block) {
-        int currentLevel = getRawLevel(block);
-
-        // Check if it's already the max level
-        if(isMaxLevel(currentLevel)) {
+        if(getValue(block)) {
+            // Already Upgraded
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
             return false;
         }
 
-        int cost = getLevel(currentLevel + 1).getExpCost();
-        if(cost == 0) return false;
+        if(upgrade.getExpCost() == 0) return false;
 
-        if(player.getTotalExperience() < cost) {
+        if(player.getTotalExperience() < upgrade.getExpCost()) {
             // They can't afford the upgrade
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
             player.sendMessage(LangUtils.parse("messages.insufficient_funds", player));
@@ -155,9 +108,20 @@ public abstract class FarmUpgrade<T> implements IFarmUpgrade<T> {
 
         // Complete Purchase
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-        player.setTotalExperience(player.getTotalExperience() - cost);
-        upgrade(player, block);
+        player.setTotalExperience(player.getTotalExperience() - upgrade.getExpCost());
+        purchase(player, block);
 
         return true;
+    }
+
+    protected void purchase(Player player, FarmBlock block) {
+        setValue(block, true);
+    }
+
+    //
+    // Getters
+    //
+    public FarmUpgradeLevel<Boolean> getUpgrade() {
+        return upgrade;
     }
 }
