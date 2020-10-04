@@ -1,4 +1,4 @@
-package org.openspigot.openfarming.farm.upgrades;
+package org.openspigot.openfarming.farm.upgrade.type;
 
 public class FarmUpgradeLevel<T> {
     private final int level;

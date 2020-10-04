@@ -12,7 +12,7 @@ import org.openspigot.openfarming.command.OpenFarmingCommand;
 import org.openspigot.openfarming.database.BlockStore;
 import org.openspigot.openfarming.database.driver.FileDriver;
 import org.openspigot.openfarming.farm.FarmBlock;
-import org.openspigot.openfarming.farm.upgrades.FarmUpgrades;
+import org.openspigot.openfarming.farm.upgrade.FarmUpgrades;
 import org.openspigot.openfarming.listener.BlockFadeListener;
 import org.openspigot.openfarming.listener.BlockGrowListener;
 import org.openspigot.openfarming.listener.BlockPlaceListener;
@@ -25,9 +25,6 @@ public final class OpenFarming extends JavaPlugin {
     //
     // Constants
     public static final Material FARM_MATERIAL = Material.END_ROD;
-    public static final Material UPGRADE_RADIUS_MATERIAL = Material.COMPASS;
-    public static final Material UPGRADE_SPEED_MATERIAL = Material.SUGAR;
-    public static final Material UPGRADE_REPLANT_MATERIAL = Material.SUNFLOWER;
 
     //
     // Instance Variables
@@ -92,7 +89,7 @@ public final class OpenFarming extends JavaPlugin {
     // Public
     //
     public FarmBlock findFarmBlock(Location location, int yOffset) {
-        int maxRadius = FarmUpgrades.RADIUS_UPGRADE.getLevel(FarmUpgrades.RADIUS_UPGRADE.getMaxLevel()).getValue();
+        int maxRadius = FarmUpgrades.RADIUS.getLevel(FarmUpgrades.RADIUS.getMaxLevel()).getValue();
 
         for (int lx = -maxRadius; lx <= maxRadius; lx++) {
             for (int lz = -maxRadius; lz <= maxRadius; lz++) {
@@ -100,7 +97,7 @@ public final class OpenFarming extends JavaPlugin {
                 Block lBlock = location.getWorld().getBlockAt(location.getBlockX() + lx, location.getBlockY() + yOffset, location.getBlockZ() + lz);
                 if (farmBlockStore.isValidBlock(lBlock)) {
                     FarmBlock checkBlock = farmBlockStore.get(lBlock);
-                    int radius = FarmUpgrades.RADIUS_UPGRADE.getLevel(checkBlock.getRadius()).getValue();
+                    int radius = FarmUpgrades.RADIUS.getValue(checkBlock);
 
                     if(Math.abs(lx) <= radius && Math.abs(lz) <= radius) {
                         return checkBlock;
@@ -111,13 +108,6 @@ public final class OpenFarming extends JavaPlugin {
         }
 
         return null;
-    }
-
-    public int maxUpgradeAmount(String name) {
-        int balLen = (getConfig().isBoolean(name + ".balCost")) ? 0 : getConfig().getIntegerList(name + ".balCost").size();
-        int expLen = (getConfig().isBoolean(name + ".expCost")) ? 0 : getConfig().getIntegerList(name + ".expCost").size();
-
-        return Math.max(balLen, expLen);
     }
 
     //

@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.openspigot.openfarming.OpenFarming;
 import org.openspigot.openfarming.database.PersistentBlock;
-import org.openspigot.openfarming.farm.upgrades.FarmUpgrades;
+import org.openspigot.openfarming.farm.upgrade.FarmUpgrades;
 import org.openspigot.openfarming.util.LangUtils;
 
 import java.util.UUID;
@@ -91,7 +91,7 @@ public class FarmBlock extends PersistentBlock {
             return;
         }
 
-        int radius = FarmUpgrades.RADIUS_UPGRADE.getValue(this);
+        int radius = FarmUpgrades.RADIUS.getValue(this);
 
         for(int lx = -radius; lx <= radius; lx++) {
             for(int lz = -radius; lz <= radius; lz++) {

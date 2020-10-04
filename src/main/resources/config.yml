@@ -1,29 +1,19 @@
-# Available Variables
-# {FARM-LEVEL}
-# {FARM-RADIUS}
-# {FARM-SPEED}
-# {FARM-EXPCOST}
-# {FARM-ECOCOST}
-# {FARM-PAGES}
-# {FARM-TYPE}
-# {FARM-REPLANT}
-#
-# {FARM-NEXTLEVEL}
-# {FARM-NEXTLEVEL-RADIUS}
-# {FARM-NEXTLEVEL-SPEED}
-# {FARM-NEXTLEVEL-EXPCOST}
-# {FARM-NEXTLEVEL-ECOCOST}
-# {FARM-NEXTLEVEL-PAGES}
-# {FARM-NEXTLEVEL-TYPE}
-# {FARM-NEXTLEVEL-REPLANT}
-
 messages:
+  prefix: "&9OpenFarming> &7"
+
+  b_yes: "Yes"
+  b_no: "No"
+
   types:
     crop: "Crop"
     animal: "Livestock"
     all: "Multi Function"
-  locked: "You can't interact with this farm as you don't own it."
-  broken: "Farm broken."
+
+  locked: "{OPENFARMING-PREFIX}&cYou can't interact with this farm as you don't own it."
+  broken: "{OPENFARMING-PREFIX}Farm broken."
+  placed: "{OPENFARMING-PREFIX}Farm placed."
+
+  insufficient_funds: "{OPENFARMING-PREFIX}&cInsufficient Funds."
 
 item:
   title: "&eAutomated &9&l{FARM-TYPE} &r&eFarm"
@@ -31,6 +21,7 @@ item:
 upgrades:
   radius:
     enabled: true
+    purchased: "{OPENFARMING-PREFIX}Radius upgraded to &f{VALUE} &7blocks."
     levels:
       0: # DEFAULT LEVEL
         value: 4
@@ -47,66 +38,85 @@ upgrades:
         ecoCost: 300
         expCost: false
 
+    gui:
+      material: COMPASS
+      purchasable:
+        name: "&eUpgrade Radius to &f{NEXTVALUE} &eblocks."
+        lore:
+          - ""
+          - "&fLeft click &eto upgrade for &f${ECO}"
+          - "&fRight click &eto upgrade for &f{EXP} &eEXP"
+      max:
+        name: "&eRadius &f{VALUE} &eblocks &8(&aMAX&8)"
+        lore: false
 
-gui:
-  overview:
-    title: "&eAutomated &f&l{FARM-TYPE} &r&eFarm"
-
-    lore:
-      - ""
-      - "&eRadius: &f{FARM-RADIUS} Blocks"
-      - "&eSpeed: &f{FARM-SPEED}x"
-      - "&eAuto Replant: &f{FARM-REPLANT}"
-      - ""
-    loreMaxLevel:
-      - ""
-      - "&eRadius: &f{FARM-RADIUS} Blocks"
-      - "&eSpeed: &f{FARM-SPEED}x"
-      - "&eAuto Replant: &f{FARM-REPLANT}"
-      - ""
-      - ""
-      - "&6MAX Tier Reached"
-
-  radiusUpgrade:
-    material: COMPASS
-    name: "&eUpgrade Radius to &f{NEXT-RADIUS}"
-    nameMaxLevel: "&fMax &eRadius Reached"
-    lore:
-      - ""
-      - "&fLeft click &eto upgrade for &f${NEXT-RADIUS-BALCOST}"
-      - "&fRight click &eto upgrade for &f{NEXT-RADIUS-EXPCOST} &elevels"
-    loreMaxLevel:
-      - ""
-      - "&7Max Level Reached"
-
-  speedUpgrade:
-    material: SUGAR
-    name: "&eUpgrade Speed to &f{NEXT-SPEED}"
-    lore:
-      - ""
-      - "&fLeft click &eto upgrade for &f${NEXT-SPEED-BALCOST}"
-      - "&fRight click &eto upgrade for &f{NEXT-SPEED-EXPCOST} &elevels"
-
+  speed:
     enabled: true
-    balCost: [ 50, 100, 150, 200, 250 ]
-    expCost: false
+    purchased: "{OPENFARMING-PREFIX}Speed upgraded to &f{VALUE}x&7."
+    levels:
+      0: # DEFAULT LEVEL
+        value: 1
+      1:
+        value: 1.25
+        ecoCost: 100
+        expCost: 0
+      2:
+        value: 1.5
+        ecoCost: 200
+        expCost: 0
+      3:
+        value: 1.75
+        ecoCost: 300
+        expCost: 0
+      4:
+        value: 2
+        ecoCost: 400
+        expCost: 0
+    gui:
+      material: SUGAR
+      purchasable:
+        name: "&eUpgrade Speed to &f{NEXTVALUE}x"
+        lore:
+          - ""
+          - "&fLeft click &eto upgrade for &f${ECO}"
+          - "&fRight click &eto upgrade for &f{EXP} &eEXP"
+      max:
+        name: "&eSpeed &f{VALUE}x &8(&aMAX&8)"
+        lore: false
 
   autoReplant:
-    material: SUNFLOWER
+    enabled: true
+    purchased: "{OPENFARMING-PREFIX}&fAuto Replant &7upgrade purchased."
+    ecoCost: 1000
+    expCost: 20000
 
-    name: "&eAuto Replant"
-    purchased_name: "&eAuto Replant &8(&aPurchased&8)"
+    gui:
+      material: SUNFLOWER
+      locked:
+        name: "&eAuto Replant"
+        lore:
+          - ""
+          - "&7Automatically replants crops."
+          - ""
+          - "&fLeft click &eto purchase for &f${ECO}"
+          - "&fRight click &eto purchase for &f{EXP} &eEXP"
+      unlocked:
+        name: "&eAuto Replant &8(&aPurchased&8)"
+        lore: false
+
+gui:
+  title: "&0Farm Overview"
+  previous:
+    title: "&ePrevious Page"
+  next:
+    title: "&eNext Page"
+
+  overview:
+    title: "&eAutomated &f&l{TYPE} &r&eFarm"
 
     lore:
       - ""
-      - "&7Automatically replants the seed for the crops."
+      - "&eRadius: &f{RADIUS} Blocks"
+      - "&eSpeed: &f{SPEED}x"
+      - "&eAuto Replant: &f{REPLANT}"
       - ""
-      - "&fLeft click &eto purchase for &f${REPLANT-BALCOST}"
-      - "&fRight click &eto purchase for &f{REPLANT-EXPCOST} &elevels"
-    purchased_lore:
-      - ""
-      - "&7Automatically replants the seed for the crops."
-
-    enabled: true
-    balCost: 2000
-    expCost: 20
